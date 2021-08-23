@@ -6,8 +6,8 @@ const fs = require('fs');
  */
 exports.getAllSauce = (req, res, next) => {
     Sauce.find()
-        .then(sauces => res.status(200).json(sauces))
-        .catch(error => res.status(400).json({ error }));
+        .then(sauces => res.status(200).json(sauces))//HTTP 200 OK, indique la réussite d'une requête
+        .catch(error => res.status(400).json({ error }));//HTTP 400 Bad Request, indique que le serveur ne peut pas comprendre la requête en raison d'une syntaxe invalide
 };
 
 /**
@@ -15,8 +15,8 @@ exports.getAllSauce = (req, res, next) => {
  */
 exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
-        .then(sauce => res.status(200).json(sauce))
-        .catch(error => res.status(404).json({ error }));
+        .then(sauce => res.status(200).json(sauce))//HTTP 200 OK, indique la réussite d'une requête
+        .catch(error => res.status(404).json({ error }));// HTTP 404 Not Found, indique que le serveur ne peut pas trouver la ressource demandée
 };
 
 /**
@@ -32,10 +32,10 @@ exports.createSauce = (req, res, next) => {
         dislikes: 0
     });
     sauce.save()
-        .then(() => res.status(201).json({ message: 'Sauce enregistrée !' }))
+        .then(() => res.status(201).json({ message: 'Sauce enregistrée !' }))//HTTP 201 Created, indique que la requête a réussi et qu'une ressource a été créée et cette nouvelle ressource est renvoyée dans le corps du message
         .catch(error => {
             console.log(json({ error }));
-            res.status(400).json({ error });
+            res.status(400).json({ error });//HTTP 400 Bad Request, indique que le serveur ne peut pas comprendre la requête en raison d'une syntaxe invalide
         });
 };
 
@@ -55,8 +55,8 @@ exports.modifySauce = (req, res, next) => {
                         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
                     }
                     Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-                        .then(() => res.status(200).json({ message: 'Sauce modifiée!' }))
-                        .catch(error => res.status(400).json({ error }));
+                        .then(() => res.status(200).json({ message: 'Sauce modifiée!' }))//HTTP 200 OK, indique la réussite d'une requête
+                        .catch(error => res.status(400).json({ error }));//HTTP 400 Bad Request, indique que le serveur ne peut pas comprendre la requête en raison d'une syntaxe invalide
                 })
             })
             .catch(error => res.status(500).json({ error }));
@@ -64,8 +64,8 @@ exports.modifySauce = (req, res, next) => {
         // si l'image n'est pas modifiée
         const sauceObject = { ...req.body };
         Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-            .then(() => res.status(200).json({ message: 'Sauce modifiée!' }))
-            .catch(error => res.status(400).json({ error }));
+            .then(() => res.status(200).json({ message: 'Sauce modifiée!' }))//HTTP 200 OK, indique la réussite d'une requête
+            .catch(error => res.status(400).json({ error }));//HTTP 400 Bad Request, indique que le serveur ne peut pas comprendre la requête en raison d'une syntaxe invalide
     }
 };
 
@@ -78,11 +78,11 @@ exports.deleteSauce = (req, res, next) => {
             const filename = sauce.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
                 Sauce.deleteOne({ _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Sauce supprimée !' }))
-                    .catch(error => res.status(400).json({ error }));
+                    .then(() => res.status(200).json({ message: 'Sauce supprimée !' }))//HTTP 200 OK, indique la réussite d'une requête
+                    .catch(error => res.status(400).json({ error }));//HTTP 400 Bad Request, indique que le serveur ne peut pas comprendre la requête en raison d'une syntaxe invalide
             })
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(500).json({ error }));//HTTP 500 Internal Server Error, indique que le serveur a rencontré un problème inattendu qui l'empêche de répondre à la requête
 };
 
 /**
@@ -126,8 +126,8 @@ exports.likeSauce = (req, res, next) => {
             newValues.dislikes = newValues.usersDisliked.length;
             // Mise à jour de la sauce avec les nouvelles valeurs
             Sauce.updateOne({ _id: sauceId }, newValues)
-                .then(() => res.status(200).json({ message: 'Sauce notée !' }))
-                .catch(error => res.status(400).json({ error }))
+                .then(() => res.status(200).json({ message: 'Sauce notée !' }))//HTTP 200 OK, indique la réussite d'une requête
+                .catch(error => res.status(400).json({ error }))//HTTP 400 Bad Request, indique que le serveur ne peut pas comprendre la requête en raison d'une syntaxe invalide
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(500).json({ error }));//HTTP 500 Internal Server Error, indique que le serveur a rencontré un problème inattendu qui l'empêche de répondre à la requête
 }

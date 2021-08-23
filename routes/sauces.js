@@ -1,12 +1,14 @@
 const express = require('express');
-//const express = require('express');
 const router = express.Router();
 
 const sauceCtrl = require('../controllers/sauces');
 const auth = require('../middlewares/auth');
 const multer = require('../middlewares/multer-config');
-//const validate = require('../middlewares/validate-inputs'); 
 
+
+
+
+/*  Création des différentes ROUTES de l'API en leurs précisant, dans l'ordre, leurs middlewares et controllers */
 
 router.get('/', auth, sauceCtrl.getAllSauce);
 router.get('/:id', auth, sauceCtrl.getOneSauce);

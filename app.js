@@ -1,14 +1,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+// donne accès au chemin de notre système de fichier
 const path = require('path');
+
+//securise Express en définissant certaines en-têtes HTTP
 const helmet = require('helmet');
+
+
 const session = require('express-session');
 
 require('dotenv').config()
 
 
-//----------------routes-----------------//
+//-----------importation des routes-----------------//
 const userRoutes = require('./routes/users');
 const sauceRoutes = require('./routes/sauces')
 
@@ -25,7 +30,7 @@ mongoose.connect(process.env.MONGODB_PATH,
 // Lancement de Express
 const app = express();
 
-
+//débloque certains systèmes de sécurité CORS
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -47,6 +52,8 @@ app.use(session({
 })
 );
 
+
+//les routes attendu par le frontend
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/auth', userRoutes);
