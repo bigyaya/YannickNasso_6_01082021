@@ -4,12 +4,14 @@ const mongoose = require('mongoose');
 // donne accès au chemin de notre système de fichier
 const path = require('path');
 
+//protège l'application de certaines vulnérabilités connues ( protection contre les attaques de type cross-site scripting et autres injections )
 //securise Express en définissant certaines en-têtes HTTP
 const helmet = require('helmet');
 
-
+//stocke les données de session sur le serveur ; il ne sauvegarde que l’ID session dans le cookie
 const session = require('express-session');
 
+//environement de configuration pour données sensibles
 require('dotenv').config()
 
 

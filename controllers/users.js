@@ -1,7 +1,7 @@
 // On importe bcrypt pour hasher le mot de passe des utilisateurs
 const bcrypt = require('bcrypt');
 
-// On importe jsonwebtoken pour attribuer/créer un token à un utilisateur au moment ou il se connecte
+// On importe jsonwebtoken pour créer et vérifier un token pour un utilisateur au moment ou il se connecte
 const jwt = require('jsonwebtoken');
 
 // On récupère notre model User
@@ -53,7 +53,7 @@ exports.login = (req, res, next) => {
                 return res.status(401).json({ error: 'Utilisateur non trouvé !' });//HTTP 401 Unauthorized, indique que la requête n'a pas été effectuée car il manque des informations d'authentification valides pour la ressource visée
             }
 
-            //compare le mot de passe entrée avec le hash de la BDD et savoir si ils ont la même string d'origine grâce à bcrypt
+            //compare le mot de passe entrée par l'utilisateur avec le hash de la BDD et savoir si ils ont la même string d'origine grâce à bcrypt
             bcrypt.compare(req.body.password, user.password)
                 .then(valid => {
 
@@ -66,15 +66,15 @@ exports.login = (req, res, next) => {
                     res.status(200).json({// Le serveur backend renvoie un token au frontend
                         userId: user._id,
 
-                        /* envoie une requête authentifier au frontend,
+                        /* envoie une requête authentifié au frontend,
                         on encode le userId pour éviter qu'un objet soit modifier par un autre userId 
                         et que l'objet soit assigner qu'a cet userId */
                         
                         token: jwt.sign(//les données que l'on veut encoder dans le Token =  Payload
                             {userId: user._id},//renvoie l'identifiant de l'utilisateur dans MongoDB
                             
-                            process.env.TOKEN_KEY,// Clé du token crypter
-                            {expiresIn: '24h'}
+                            process.env.TOKEN_KEY,// Clé du token crypter, pour sécuriser l'encodage
+                            {expiresIn: '24h'}//argument de configuration
                         )
                     });
                 })
